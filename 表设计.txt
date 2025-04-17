@@ -1,0 +1,220 @@
+6.3 数据库逻辑设计
+
+
+
+设计出E-R图后，可根据4.8节所给出的原则将E-R图转换为数据库模式。通常是每个实体集（包括强和弱实体集）都对应于一个关系表。而联系集则应根据映射基数决定具体转换方式。图6-17所示的E-R图可转为如下数据库关系模式，其中主码属性加粗体和下画线、外码属性加粗斜体以示区分。
+（1）职员Employee表：由职员（Employee）实体集转化而来，如图6-18所示。
+
+
+属性名称	数据类型	属性描述
+employeeNo	char(10)	职员编号
+empPassword	char(10)	登录密码
+empName	varchar(20)	姓名
+
+属性名称	数据类型	属性描述
+sex	char(2)	性别
+birthday	datetime	出生日期
+department	varchar(30)	部门
+title	varchar(20)	职务
+salary	numeric	薪水
+address	varchar(40)	住址
+telephone	varchar(15)	电话
+email	varchar(20)	电子邮箱
+
+图6-18（续）
+
+（2）会员Member表：由会员（Member）实体集转化而来，如图6-19所示。
+
+
+属性名称	数据类型	属性描述
+memberN o	char(10)	会员编号
+memPassword	char(10)	登录密码
+memName	varchar(20)	姓名
+sex	char(2)	性别
+birthday	datetime	出生日期
+telephone	varchar(15)	电话
+email	varchar(20)	电子邮箱
+address	varchar(40)	住址
+zipCode	char(6)	邮政编码
+unit	varchar(40)	单位
+totalAmount	numeric	购书总额
+memLevel	char(1)	会员等级
+
+图6-19 会员Member表
+
+（3）会员等级MemClass表：由会员等级（MemClass）实体集转化而来，如图6-20所示。
+
+
+
+属性名称	数据类型	属性描述
+memLevel	char(1)	会员等级
+levelSum	numeric	等级购书额定
+memDiscount	float	会员折扣
+
+（4）图书Book表：由图书（Book）实体集和属于（Belong）联系集共同转化而来，如图6-21所示。由于联系集Belong是一对多联系，故可合并到Book表中来。
+
+
+属性名称	数据类型	属性描述
+ISBN	char(17)	书号
+bookTitle	varchar(30)	书名
+author	varchar(40)	作者
+publishDate	datetime	出版日期
+version	int	版次
+category	varchar(20)	类别
+stockNumber	int	库存数量
+price	numeric	定价
+bookDiscount	float	图书折扣
+introduction	varchar(500)	内容简介
+catalog	varchar(500)	目录
+pressNo	char(12)	出版社编号
+
+图6-21 图书Book表
+
+（5）出版社Press表：由出版社（Press）实体集转化而来，如图6-22所示。
+
+属性名称	数据类型	属性描述
+pressNo	char(12)	出版社编号
+pressTitle	varchar(40)	出版社名称
+address	varchar(40)	出版社地址
+zipCode	char(6)	邮政编码
+contactPerson	varchar(12)	联系人
+telephone	varchar(15)	联系电话
+fax	varchar(15)	传真
+email	varchar(20)	电子邮箱
+图6-22 出版社Press表
+
+（6）配送公司Company表：由配送公司（Company）实体集转化而来，如图6-23所示。
+（7）留言Message表：由留言（Message）实体集和发布（Release）联系集共同转化而来，如图6-24所示。由于联系集Release是一对多联系，故可合并到Message表中来。
+属性名称	数据类型	属性描述
+companyNo	char(12)	公司编号
+companyTitle	varchar(40)	公司名称
+address	varchar(40)	公司地址
+zipCode	char(6)	邮政编码
+contactPerson	varchar(12)	联系人
+telephone	varchar(15)	联系电话
+fax	varchar(20)	传真
+email	varchar(20)	电子邮箱
+
+图6-23 配送公司Company表
+
+
+属性名称	数据类型	属性描述
+messageNo	char(10)	留言编号
+memberNo	char(10)	发布会员编号
+releaseDate	datetime	留言日期
+messageContent	varchar(100)	留言内容
+
+图6-24 留言Message 表
+
+（8）留言回复 MessageReply表：由留言回复（MessageReply）弱实体集和标识联系集指向（Direct）以及联系集回复1（Reply1）、回复2（Reply2）共同转化而来，如图6-25所示。由于联系集Direct、Reply1、Reply2都是一对多联系，故可合并到MessageReply表中来。
+
+属性名称	数据类型	属性描述
+messageNo	char(10)	留言编号
+replyNo	char(4)	回复编号
+employeeNo	char(10)	回复职员编号
+memberNo	char(10)	回复会员编号
+replyDate	datetime	回复日期
+replyContent	varchar(100)	回复内容
+图6-25 留言回复 MessageReply表
+
+（9）订单 OrderSheet表：由订单（OrderSheet）实体集以及订购（Order）、审核（Check）联系集转化而来，如图6-26所示。由于联系集Order、Check都为一对多联系，故可合并到OrderSheet表中来。
+（10）订单明细OrderBook表：由图书订购（OrderBook）多对多联系集转化而来，如图6-27所示。
+属性名称	数据类型	属性描述
+o rderNo	char(15)	订单编号
+memberNo	char(10)	会员编号
+employeeNo	char(10)	职员编号
+orderDate	datetime	订购日期
+tolAmtReceivable	numeric	应收总金额
+tolPaidAmt	numeric	实收总金额
+memDiscount	float	会员折扣
+payWay	char(1)	付款方式
+paidFlag	char(1)	是否付款
+orderState	char(1)	订单状态
+invoiceUnit	varchar(40)	发票单位
+
+图6-26 订单OrderSheet表
+
+
+属性名称	数据类型	属性描述
+orderNo	char(15)	订单编号
+ISBN	char(17)	图书编号
+quantity	int	订购数量
+price	numeric	定价
+amtReceivable	numeric	应收金额
+bookDiscount	float	图书折扣
+paidAmt	numeric	实收金额
+shippedQuantity	int	已配送数量
+shipState	char(1)	配送状态
+
+图6-27 订单明细 OrderBook表
+（11）配送单ShipSheet表：由配送单（ShipSheet）弱实体集和包含（Include）标识联系集以及联系集分派（Assign）、配送（Ship）转化而来，如图6-28所示。由于联系集Include、Assign和Ship都是一对多联系，故可合并到ShipSheet表中来。
+
+属性名称	数据类型	属性描述
+orderNo	char(15)	订单编号
+shipNo	char(4)	配送单号
+receiver	varchar(20)	收货人
+shipAddress	varchar(40)	送货地址
+zipCode	char(6)	邮政编码
+shipTel	varchar(15)	联系电话
+separatedFlag	char(1)	是否拆送
+invoiceNo	varchar(20)	发票编号
+shipDate	datetime	配送日期
+shipState	char(1)	配送状态
+companyNo	char(12)	配送公司编号
+employeeNo	char(10)	职员编号
+
+图6-28 配送单ShipSheet表
+
+（12）配送明细 ShipBook表：由图书配送（ShipBook）多对多联系集转化而来，如图6-29所示。
+
+
+属性名称	数据类型	属性描述
+orderNo	char(15)	订单号
+shipNo	char(4)	配送单号
+ISBN	char(17)	图书编号
+shipQuantity	int	配送数量
+
+图6-29 配送明细 ShipBook表
+
+（13）采购单PurchaseSheet表：由采购单（PurchaseSheet）实体集以及采购（Purchase）、供应（Supply）联系集转化而来，如图6-30所示。由于联系集Purchase和Supply都是一对多联系，故可合并到PurchaseSheet表中来。
+
+
+属性名称	数据类型	属性描述
+purchaseNo	char(15)	采购单号
+purDate	datetime	采购日期
+purAmount	numeric	采购总金额
+storedFlag	char(1)	是否入库
+employeeNo	char(10)	职员编号
+pressNo	char(12)	出版社编号
+
+（14）采购明细PurchaseBook表：由采购明细（PurchaseBook）弱实体集和标识联系集组成（Compose）以及联系集参照（Reference）转化而来，如图6-31所示。由于联系集Compose和Reference都是一对多联系，故可合并到PurchaseBook表中来。
+
+
+属性名称	数据类型	属性描述
+purchaseNo	char(15)	采购单号
+serialNo	char(4)	序号
+ISBN	char(17)	图书编号
+purQuantity	int	采购数量
+purPrice	numeric	采购单价
+storedQuantity	int	已入库数量
+
+图6-31 采购明细 PurchaseBook表
+
+（15）入库单StoreSheet表：由入库单（StoreSheet）弱实体集和标识联系集拥有（Hold）以及联系集入库（Store）、验收（Accept）转化而来，如图6-32所示。由于联系集Hold、Store和Accept都是一对多联系，故可合并到StoreSheet表中来。
+
+
+属性名称	数据类型	属性描述
+purchaseNo	char(15)	采购单号
+storeNo	char(4)	入库单号
+storeDate	datetime	入库日期
+sEmployeeNo	char(10)	入库职员编号
+aEmployeeNo	char(10)	验收职员编号
+图6-32 入库单StoreSheet表
+
+（16）入库明细 StoreBook表：由图书人库（StoreBook）多对多联系集转化而来，如图6-33所示。
+
+属性名称	数据类型	属性描述
+purchaseNo	char(15)	采购单号
+storeNo	char(4)	入库单号
+ISBN	char(17)	图书编号
+quantity	int	入库数量
